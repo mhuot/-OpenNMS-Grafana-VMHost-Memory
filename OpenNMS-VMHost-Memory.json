@@ -41,6 +41,12 @@
       "id": "postgres",
       "name": "PostgreSQL",
       "version": "5.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "singlestat",
+      "name": "Singlestat",
+      "version": "5.0.0"
     }
   ],
   "annotations": {
@@ -60,9 +66,144 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1529191687300,
+  "iteration": 1529193079481,
   "links": [],
   "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 7,
+      "panels": [],
+      "repeat": "node",
+      "title": "$node",
+      "type": "row"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "${DS_OPENNMS-HELM-PERFORMANCE}",
+      "decimals": 2,
+      "format": "percent",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "id": 9,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "attribute": "MemUsageAvg",
+          "hide": true,
+          "nodeId": "$node",
+          "refId": "A",
+          "resourceId": "nodeSnmp[]",
+          "type": "attribute"
+        },
+        {
+          "expression": "MemUsageAvg/100",
+          "label": "Memory Usage Perecentage",
+          "refId": "B",
+          "type": "expression"
+        },
+        {
+          "filter": {
+            "backend": "Java",
+            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.Chomp",
+            "description": "Strips leading and trailing rows that contain nothing but NaNs/null values.",
+            "name": "Chomp",
+            "parameter": [
+              {
+                "default": "true",
+                "description": "When set, leading and trailing rows containing NaNs will be removed",
+                "displayName": "Strip",
+                "key": "stripNaNs",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "default": "0",
+                "description": "Timestamp in milliseconds. Any rows before this time will be removed.",
+                "displayName": "Cutoff",
+                "key": "cutoffDate",
+                "required": false,
+                "type": "double"
+              }
+            ]
+          },
+          "filterParameters": {
+            "cutoffDate": "300000000",
+            "stripNaNs": "true"
+          },
+          "refId": "C",
+          "type": "filter"
+        }
+      ],
+      "thresholds": "",
+      "title": "Memory Usage Perecentage",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "avg"
+    },
     {
       "aliasColors": {},
       "bars": false,
@@ -71,20 +212,21 @@
       "datasource": "${DS_OPENNMS-HELM-PERFORMANCE}",
       "fill": 1,
       "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 0
+        "h": 10,
+        "w": 8,
+        "x": 3,
+        "y": 1
       },
-      "id": 1,
+      "id": 2,
       "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -94,116 +236,41 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeat": null,
       "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "attribute": "MemEntitlementAvg",
-          "label": "MemEnt",
+          "attribute": "MemCdAvg",
+          "label": "Memory Committed",
           "nodeId": "$node",
           "refId": "A",
           "resourceId": "nodeSnmp[]",
           "type": "attribute"
         },
         {
-          "filter": {
-            "backend": "R",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.TrendLine",
-            "description": "Fits a trend line or polynomial to a given column.",
-            "name": "Trend",
-            "parameter": [
-              {
-                "default": null,
-                "description": "Input column.",
-                "displayName": "Input",
-                "key": "inputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": null,
-                "description": "Output column.",
-                "displayName": "Output",
-                "key": "outputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0",
-                "description": "Number seconds ahead the of the column for which we want to include the trend line.",
-                "displayName": "Forecast",
-                "key": "secondsAhead",
-                "required": false,
-                "type": "long"
-              },
-              {
-                "default": "1",
-                "description": "Polynomial order of the trend line/curve. Set this to 1 for a line.",
-                "displayName": "Order",
-                "key": "polynomialOrder",
-                "required": false,
-                "type": "int"
-              }
-            ]
-          },
-          "filterParameters": {
-            "inputColumn": "MemEnt",
-            "outputColumn": "MenEntTrend",
-            "polynomialOrder": "1",
-            "secondsAhead": "2419200"
-          },
-          "refId": "B",
-          "type": "filter"
-        },
-        {
-          "filter": {
-            "backend": "Java",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
-            "description": "Removes outliers and replaces them with interpolated values.",
-            "name": "Outlier",
-            "parameter": [
-              {
-                "default": null,
-                "description": "Input column.",
-                "displayName": "Input",
-                "key": "inputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0.95",
-                "description": "Quantile level. Must be > 0 and <= 100. Any values greater than the calculated percentile will be replaced with an interpolated value.",
-                "displayName": "Quantile",
-                "key": "quantile",
-                "required": false,
-                "type": "double"
-              }
-            ]
-          },
-          "filterParameters": {
-            "inputColumn": "MemEnt",
-            "quantile": "0.95"
-          },
-          "refId": "C",
-          "type": "filter"
-        },
-        {
-          "attribute": "MemZeroAvg",
-          "label": "MemZero",
+          "attribute": "MemGrantedAvg",
+          "label": "Memory Granted",
           "nodeId": "$node",
-          "refId": "D",
+          "refId": "B",
+          "resourceId": "nodeSnmp[]",
+          "type": "attribute"
+        },
+        {
+          "attribute": "MemAeAvg",
+          "label": "Memory Active",
+          "nodeId": "$node",
+          "refId": "F",
           "resourceId": "nodeSnmp[]",
           "type": "attribute"
         },
         {
           "filter": {
-            "backend": "R",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.TrendLine",
-            "description": "Fits a trend line or polynomial to a given column.",
-            "name": "Trend",
+            "backend": "Java",
+            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
+            "description": "Removes outliers and replaces them with interpolated values.",
+            "name": "Outlier",
             "parameter": [
               {
                 "default": null,
@@ -214,38 +281,19 @@
                 "type": "string"
               },
               {
-                "default": null,
-                "description": "Output column.",
-                "displayName": "Output",
-                "key": "outputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0",
-                "description": "Number seconds ahead the of the column for which we want to include the trend line.",
-                "displayName": "Forecast",
-                "key": "secondsAhead",
+                "default": "0.95",
+                "description": "Quantile level. Must be > 0 and <= 100. Any values greater than the calculated percentile will be replaced with an interpolated value.",
+                "displayName": "Quantile",
+                "key": "quantile",
                 "required": false,
-                "type": "long"
-              },
-              {
-                "default": "1",
-                "description": "Polynomial order of the trend line/curve. Set this to 1 for a line.",
-                "displayName": "Order",
-                "key": "polynomialOrder",
-                "required": false,
-                "type": "int"
+                "type": "double"
               }
             ]
           },
           "filterParameters": {
-            "inputColumn": "MemZero",
-            "outputColumn": "MenZeroTrend",
-            "polynomialOrder": "1",
-            "secondsAhead": "2419200"
+            "inputColumn": "Memory Committed"
           },
-          "refId": "E",
+          "refId": "C",
           "type": "filter"
         },
         {
@@ -274,15 +322,45 @@
             ]
           },
           "filterParameters": {
-            "inputColumn": "MemZero",
-            "quantile": "0.95"
+            "inputColumn": "Memory Granted"
           },
-          "refId": "F",
+          "refId": "D",
           "type": "filter"
         },
         {
-          "attribute": "MemCdAvg",
-          "label": "MemConsumed",
+          "filter": {
+            "backend": "Java",
+            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
+            "description": "Removes outliers and replaces them with interpolated values.",
+            "name": "Outlier",
+            "parameter": [
+              {
+                "default": null,
+                "description": "Input column.",
+                "displayName": "Input",
+                "key": "inputColumn",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": "0.95",
+                "description": "Quantile level. Must be > 0 and <= 100. Any values greater than the calculated percentile will be replaced with an interpolated value.",
+                "displayName": "Quantile",
+                "key": "quantile",
+                "required": false,
+                "type": "double"
+              }
+            ]
+          },
+          "filterParameters": {
+            "inputColumn": "Memory Active"
+          },
+          "refId": "E",
+          "type": "filter"
+        },
+        {
+          "attribute": "MemUdAvg",
+          "label": "Memory Used",
           "nodeId": "$node",
           "refId": "G",
           "resourceId": "nodeSnmp[]",
@@ -290,56 +368,6 @@
         },
         {
           "filter": {
-            "backend": "R",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.TrendLine",
-            "description": "Fits a trend line or polynomial to a given column.",
-            "name": "Trend",
-            "parameter": [
-              {
-                "default": null,
-                "description": "Input column.",
-                "displayName": "Input",
-                "key": "inputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": null,
-                "description": "Output column.",
-                "displayName": "Output",
-                "key": "outputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0",
-                "description": "Number seconds ahead the of the column for which we want to include the trend line.",
-                "displayName": "Forecast",
-                "key": "secondsAhead",
-                "required": false,
-                "type": "long"
-              },
-              {
-                "default": "1",
-                "description": "Polynomial order of the trend line/curve. Set this to 1 for a line.",
-                "displayName": "Order",
-                "key": "polynomialOrder",
-                "required": false,
-                "type": "int"
-              }
-            ]
-          },
-          "filterParameters": {
-            "inputColumn": "MemConsumed",
-            "outputColumn": "MemConsumedTrend",
-            "polynomialOrder": "1",
-            "secondsAhead": "2419200"
-          },
-          "refId": "H",
-          "type": "filter"
-        },
-        {
-          "filter": {
             "backend": "Java",
             "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
             "description": "Removes outliers and replaces them with interpolated values.",
@@ -364,17 +392,16 @@
             ]
           },
           "filterParameters": {
-            "inputColumn": "MemConsumed",
-            "quantile": "0.95"
+            "inputColumn": "Memory Used"
           },
-          "refId": "I",
+          "refId": "H",
           "type": "filter"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Memory with Trend",
+      "title": "Memory Usage",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -391,15 +418,16 @@
       "yaxes": [
         {
           "format": "deckbytes",
-          "label": "MemEnt",
+          "label": "Memory",
           "logBase": 1,
           "max": null,
           "min": null,
           "show": true
         },
         {
-          "format": "s",
-          "label": "UpTime",
+          "decimals": null,
+          "format": "short",
+          "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
@@ -417,22 +445,24 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "${DS_OPENNMS-HELM-PERFORMANCE}",
+      "description": "This represents how much machine memory is saved due to sharing: shared - sharedcommon = machine memory (host memory) savings (KB)",
       "fill": 1,
       "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 7
+        "h": 10,
+        "w": 4,
+        "x": 11,
+        "y": 1
       },
-      "id": 4,
+      "id": 3,
       "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -449,456 +479,28 @@
       "targets": [
         {
           "attribute": "MemSharedAvg",
-          "label": "MemShared",
+          "hide": true,
           "nodeId": "$node",
           "refId": "A",
           "resourceId": "nodeSnmp[]",
           "type": "attribute"
         },
         {
-          "filter": {
-            "backend": "Java",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
-            "description": "Removes outliers and replaces them with interpolated values.",
-            "name": "Outlier",
-            "parameter": [
-              {
-                "default": null,
-                "description": "Input column.",
-                "displayName": "Input",
-                "key": "inputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0.95",
-                "description": "Quantile level. Must be > 0 and <= 100. Any values greater than the calculated percentile will be replaced with an interpolated value.",
-                "displayName": "Quantile",
-                "key": "quantile",
-                "required": false,
-                "type": "double"
-              }
-            ]
-          },
-          "filterParameters": {
-            "inputColumn": "MemShared",
-            "quantile": "0.95"
-          },
+          "attribute": "MemSharedcommonAvg",
+          "hide": true,
+          "nodeId": "$node",
           "refId": "B",
-          "type": "filter"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Shared Memory",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "decbytes",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_OPENNMS-HELM-PERFORMANCE}",
-      "fill": 1,
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 14
-      },
-      "id": 3,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "attribute": "MemOdMaxAvg",
-          "label": "MemoryOverhead",
-          "nodeId": "$node",
-          "refId": "A",
           "resourceId": "nodeSnmp[]",
           "type": "attribute"
         },
         {
-          "filter": {
-            "backend": "Java",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
-            "description": "Removes outliers and replaces them with interpolated values.",
-            "name": "Outlier",
-            "parameter": [
-              {
-                "default": null,
-                "description": "Input column.",
-                "displayName": "Input",
-                "key": "inputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0.95",
-                "description": "Quantile level. Must be > 0 and <= 100. Any values greater than the calculated percentile will be replaced with an interpolated value.",
-                "displayName": "Quantile",
-                "key": "quantile",
-                "required": false,
-                "type": "double"
-              }
-            ]
-          },
-          "filterParameters": {
-            "inputColumn": "MemoryOverhead",
-            "quantile": "0.95"
-          },
+          "expression": "MemSharedAvg - MemSharedcommonAvg",
+          "label": "Memory Saved by Sharing",
           "refId": "C",
-          "type": "filter"
-        },
-        {
-          "filter": {
-            "backend": "R",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.TrendLine",
-            "description": "Fits a trend line or polynomial to a given column.",
-            "name": "Trend",
-            "parameter": [
-              {
-                "default": null,
-                "description": "Input column.",
-                "displayName": "Input",
-                "key": "inputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": null,
-                "description": "Output column.",
-                "displayName": "Output",
-                "key": "outputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0",
-                "description": "Number seconds ahead the of the column for which we want to include the trend line.",
-                "displayName": "Forecast",
-                "key": "secondsAhead",
-                "required": false,
-                "type": "long"
-              },
-              {
-                "default": "1",
-                "description": "Polynomial order of the trend line/curve. Set this to 1 for a line.",
-                "displayName": "Order",
-                "key": "polynomialOrder",
-                "required": false,
-                "type": "int"
-              }
-            ]
-          },
-          "filterParameters": {
-            "inputColumn": "MemOdMaxAvg",
-            "outputColumn": "MemOdMaxAvgTrend",
-            "polynomialOrder": "1",
-            "secondsAhead": "2419200"
-          },
-          "refId": "E",
-          "type": "filter"
-        },
-        {
-          "attribute": "MemOdTdAvg",
-          "label": "MemOverheadTouched",
-          "nodeId": "$node",
-          "refId": "B",
-          "resourceId": "nodeSnmp[]",
-          "type": "attribute"
-        },
-        {
-          "filter": {
-            "backend": "Java",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
-            "description": "Removes outliers and replaces them with interpolated values.",
-            "name": "Outlier",
-            "parameter": [
-              {
-                "default": null,
-                "description": "Input column.",
-                "displayName": "Input",
-                "key": "inputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0.95",
-                "description": "Quantile level. Must be > 0 and <= 100. Any values greater than the calculated percentile will be replaced with an interpolated value.",
-                "displayName": "Quantile",
-                "key": "quantile",
-                "required": false,
-                "type": "double"
-              }
-            ]
-          },
-          "filterParameters": {
-            "inputColumn": "MemOverheadTouched",
-            "quantile": "0.95"
-          },
-          "refId": "D",
-          "type": "filter"
-        },
-        {
-          "filter": {
-            "backend": "R",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.TrendLine",
-            "description": "Fits a trend line or polynomial to a given column.",
-            "name": "Trend",
-            "parameter": [
-              {
-                "default": null,
-                "description": "Input column.",
-                "displayName": "Input",
-                "key": "inputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": null,
-                "description": "Output column.",
-                "displayName": "Output",
-                "key": "outputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0",
-                "description": "Number seconds ahead the of the column for which we want to include the trend line.",
-                "displayName": "Forecast",
-                "key": "secondsAhead",
-                "required": false,
-                "type": "long"
-              },
-              {
-                "default": "1",
-                "description": "Polynomial order of the trend line/curve. Set this to 1 for a line.",
-                "displayName": "Order",
-                "key": "polynomialOrder",
-                "required": false,
-                "type": "int"
-              }
-            ]
-          },
-          "filterParameters": {
-            "inputColumn": "MemOdTdAvg",
-            "outputColumn": "MemOdTdAvgTrend",
-            "polynomialOrder": "1",
-            "secondsAhead": "2419200"
-          },
-          "refId": "F",
-          "type": "filter"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Memory Overhead",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "decbytes",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_OPENNMS-HELM-PERFORMANCE}",
-      "description": "Measures the difference between the Consumed and Entitled",
-      "fill": 1,
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 21
-      },
-      "id": 2,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "attribute": "MemEntitlementAvg",
-          "hide": true,
-          "label": "MemEnt",
-          "nodeId": "$node",
-          "refId": "A",
-          "resourceId": "nodeSnmp[]",
-          "type": "attribute"
-        },
-        {
-          "attribute": "MemCdAvg",
-          "hide": true,
-          "label": "MemConsumed",
-          "nodeId": "$node",
-          "refId": "G",
-          "resourceId": "nodeSnmp[]",
-          "type": "attribute"
-        },
-        {
-          "expression": "MemEnt-MemConsumed",
-          "label": "MemMargin",
-          "refId": "B",
           "type": "expression"
         },
         {
           "filter": {
-            "backend": "R",
-            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.TrendLine",
-            "description": "Fits a trend line or polynomial to a given column.",
-            "name": "Trend",
-            "parameter": [
-              {
-                "default": null,
-                "description": "Input column.",
-                "displayName": "Input",
-                "key": "inputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": null,
-                "description": "Output column.",
-                "displayName": "Output",
-                "key": "outputColumn",
-                "required": true,
-                "type": "string"
-              },
-              {
-                "default": "0",
-                "description": "Number seconds ahead the of the column for which we want to include the trend line.",
-                "displayName": "Forecast",
-                "key": "secondsAhead",
-                "required": false,
-                "type": "long"
-              },
-              {
-                "default": "1",
-                "description": "Polynomial order of the trend line/curve. Set this to 1 for a line.",
-                "displayName": "Order",
-                "key": "polynomialOrder",
-                "required": false,
-                "type": "int"
-              }
-            ]
-          },
-          "filterParameters": {
-            "inputColumn": "MemMargin",
-            "outputColumn": "MemMarginTrend",
-            "polynomialOrder": "1",
-            "secondsAhead": "2419200"
-          },
-          "hide": false,
-          "refId": "H",
-          "type": "filter"
-        },
-        {
-          "filter": {
             "backend": "Java",
             "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
             "description": "Removes outliers and replaces them with interpolated values.",
@@ -923,17 +525,17 @@
             ]
           },
           "filterParameters": {
-            "inputColumn": "MemMargin",
+            "inputColumn": "Memory Saved by Sharing",
             "quantile": "0.95"
           },
-          "refId": "I",
+          "refId": "D",
           "type": "filter"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Memory Margin",
+      "title": "Memory Saved by Sharing",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -950,15 +552,252 @@
       "yaxes": [
         {
           "format": "deckbytes",
-          "label": "MemEnt",
+          "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
           "show": true
         },
         {
-          "format": "s",
-          "label": "UpTime",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_OPENNMS-HELM-PERFORMANCE}",
+      "description": "Amount of memory that is used by swap. Sum of memory swapped of all powered on VMs and vSphere services on the host.",
+      "fill": 1,
+      "gridPos": {
+        "h": 10,
+        "w": 5,
+        "x": 15,
+        "y": 1
+      },
+      "id": 4,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "attribute": "MemSpusedAvg",
+          "hide": false,
+          "label": "Swap Used",
+          "nodeId": "$node",
+          "refId": "A",
+          "resourceId": "nodeSnmp[]",
+          "type": "attribute"
+        },
+        {
+          "filter": {
+            "backend": "Java",
+            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
+            "description": "Removes outliers and replaces them with interpolated values.",
+            "name": "Outlier",
+            "parameter": [
+              {
+                "default": null,
+                "description": "Input column.",
+                "displayName": "Input",
+                "key": "inputColumn",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": "0.95",
+                "description": "Quantile level. Must be > 0 and <= 100. Any values greater than the calculated percentile will be replaced with an interpolated value.",
+                "displayName": "Quantile",
+                "key": "quantile",
+                "required": false,
+                "type": "double"
+              }
+            ]
+          },
+          "filterParameters": {
+            "inputColumn": "Swap Used",
+            "quantile": "0.95"
+          },
+          "refId": "D",
+          "type": "filter"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total Swapped",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "deckbytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_OPENNMS-HELM-PERFORMANCE}",
+      "fill": 1,
+      "gridPos": {
+        "h": 10,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 5,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "attribute": "MemHeapfreeAvg",
+          "label": "Memory Heap Free",
+          "nodeId": "$node",
+          "refId": "D",
+          "resourceId": "nodeSnmp[]",
+          "type": "attribute"
+        },
+        {
+          "filter": {
+            "backend": "Java",
+            "canonicalName": "org.opennms.netmgt.measurements.filters.impl.OutlierFilter",
+            "description": "Removes outliers and replaces them with interpolated values.",
+            "name": "Outlier",
+            "parameter": [
+              {
+                "default": null,
+                "description": "Input column.",
+                "displayName": "Input",
+                "key": "inputColumn",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "default": "0.95",
+                "description": "Quantile level. Must be > 0 and <= 100. Any values greater than the calculated percentile will be replaced with an interpolated value.",
+                "displayName": "Quantile",
+                "key": "quantile",
+                "required": false,
+                "type": "double"
+              }
+            ]
+          },
+          "filterParameters": {
+            "inputColumn": "Memory Heap Free"
+          },
+          "refId": "B",
+          "type": "filter"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Memory Heap",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "deckbytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
@@ -983,13 +822,13 @@
         "datasource": "${DS_OPENNMS-POSTGRES}",
         "hide": 0,
         "includeAll": false,
-        "label": null,
+        "label": "Data Center",
         "multi": false,
-        "name": "category",
+        "name": "DataCenter",
         "options": [],
-        "query": "select categoryname from categories",
+        "query": "select distinct split_part(split_part(vmwaretopologyinfo, ',', 3), '/',2) as DataCenter from assets where vmwaremanagedentitytype = 'HostSystem' order by DataCenter;",
         "refresh": 1,
-        "regex": "/VMWare*/",
+        "regex": "",
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -1000,14 +839,34 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_OPENNMS-HELM-PERFORMANCE}",
+        "datasource": "${DS_OPENNMS-POSTGRES}",
         "hide": 0,
         "includeAll": false,
-        "label": null,
+        "label": "",
+        "multi": false,
+        "name": "Domain",
+        "options": [],
+        "query": "select distinct split_part(split_part(vmwaretopologyinfo, ',', 1), '/',2) as Domain from assets where vmwaremanagedentitytype = 'HostSystem' and split_part(split_part(vmwaretopologyinfo, ',', 3), '/',2) = '$DataCenter' order by Domain;",
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "${DS_OPENNMS-POSTGRES}",
+        "hide": 0,
+        "includeAll": false,
+        "label": "",
         "multi": false,
         "name": "node",
         "options": [],
-        "query": "nodeFilter(serviceName like 'VMware-VirtualMachine' & (categoryName == '$category'))",
+        "query": "select nodelabel  AS __text, foreignsource || ':' || foreignid AS __value from node where nodeid in (select nodeid from assets where split_part(split_part(vmwaretopologyinfo, ',', 3), '/',2) = '$DataCenter' and split_part(split_part(vmwaretopologyinfo, ',', 1), '/',2) = '$Domain');",
         "refresh": 1,
         "regex": "",
         "sort": 1,
@@ -1020,8 +879,8 @@
     ]
   },
   "time": {
-    "from": "now/y",
-    "to": "now/y"
+    "from": "now-30d",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -1049,7 +908,7 @@
     ]
   },
   "timezone": "",
-  "title": "VMWare Memory",
-  "uid": "eod-eiHmz",
-  "version": 14
+  "title": "VMHost Memory",
+  "uid": "c22isINiz",
+  "version": 4
 }
