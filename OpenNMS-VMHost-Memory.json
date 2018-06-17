@@ -66,7 +66,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1529193079481,
+  "iteration": 1529232793595,
   "links": [],
   "panels": [
     {
@@ -861,9 +861,9 @@
         "current": {},
         "datasource": "${DS_OPENNMS-POSTGRES}",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "",
-        "multi": false,
+        "multi": true,
         "name": "node",
         "options": [],
         "query": "select nodelabel  AS __text, foreignsource || ':' || foreignid AS __value from node where nodeid in (select nodeid from assets where split_part(split_part(vmwaretopologyinfo, ',', 3), '/',2) = '$DataCenter' and split_part(split_part(vmwaretopologyinfo, ',', 1), '/',2) = '$Domain');",
@@ -910,5 +910,5 @@
   "timezone": "",
   "title": "VMHost Memory",
   "uid": "c22isINiz",
-  "version": 4
+  "version": 10
 }
